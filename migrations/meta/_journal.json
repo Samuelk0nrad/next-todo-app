@@ -15,6 +15,20 @@
       "when": 1746729549999,
       "tag": "0001_wide_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746731753554,
+      "tag": "0002_optimal_spiral",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746732187382,
+      "tag": "0003_sleepy_blue_blade",
+      "breakpoints": true
     }
   ]
 }
