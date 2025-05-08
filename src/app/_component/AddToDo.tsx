@@ -1,7 +1,7 @@
 export function AddToDo() {
   return (
     <div className="flex w-full max-w-md mb-4">
-      <form action={() => {}}>
+      <form>
         <input
           type="text"
           placeholder="Add your task"
