@@ -3,22 +3,42 @@ import { useState } from "react";
 
 export default function Home() {
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Learn JavaScript projects", completed: false },
-    { id: 2, text: "Make a to do list app", completed: false },
-    { id: 3, text: "Host it on online server", completed: true },
-    { id: 4, text: "Link it to your resume", completed: false },
-    { id: 5, text: "Get a software job", completed: false },
+    { id: 1, text: "Learn JavaScript projects", completed: false, dueDate: "" },
+    { id: 2, text: "Make a to do list app", completed: false, dueDate: "" },
+    {
+      id: 3,
+      text: "Host it on online server",
+      completed: true,
+      dueDate: "2025-05-10",
+    },
+    { id: 4, text: "Link it to your resume", completed: false, dueDate: "" },
+    {
+      id: 5,
+      text: "Get a software job",
+      completed: false,
+      dueDate: "2025-06-01",
+    },
   ]);
   const [newTask, setNewTask] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
 
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+      setTasks([
+        ...tasks,
+        {
+          id: Date.now(),
+          text: newTask,
+          completed: false,
+          dueDate: newDueDate,
+        },
+      ]);
       setNewTask("");
+      setNewDueDate("");
     }
   };
 
-  const toggleTask = (id) => {
+  const toggleTask = (id: number) => {
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
@@ -26,8 +46,14 @@ export default function Home() {
     );
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = (id: number) => {
     setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const setTaskDueDate = (id: number, dueDate: string) => {
+    setTasks(
+      tasks.map((task) => (task.id === id ? { ...task, dueDate } : task))
+    );
   };
 
   return (
@@ -40,6 +66,12 @@ export default function Home() {
           onChange={(e) => setNewTask(e.target.value)}
           placeholder="Add your task"
           className="flex-1 p-2 rounded-l-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="date"
+          value={newDueDate}
+          onChange={(e) => setNewDueDate(e.target.value)}
+          className="p-2 bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           onClick={addTask}
@@ -69,12 +101,20 @@ export default function Home() {
                 {task.text}
               </span>
             </div>
-            <button
-              onClick={() => deleteTask(task.id)}
-              className="text-red-500 hover:text-red-700"
-            >
-              ✕
-            </button>
+            <div className="flex items-center">
+              <input
+                type="date"
+                value={task.dueDate}
+                onChange={(e) => setTaskDueDate(task.id, e.target.value)}
+                className="mr-2 p-1 bg-gray-700 border border-gray-600 rounded-md text-sm"
+              />
+              <button
+                onClick={() => deleteTask(task.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ✕
+              </button>
+            </div>
           </li>
         ))}
       </ul>
