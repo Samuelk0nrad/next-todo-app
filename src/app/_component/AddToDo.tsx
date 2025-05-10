@@ -1,5 +1,5 @@
-import { db } from "@/data/db";
-import { todoTable } from "@/data/schema";
+import { db } from "@/server/db";
+import { todoTable } from "@/server/db/schema";
 
 export function AddToDo() {
   return (

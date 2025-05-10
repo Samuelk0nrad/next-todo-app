@@ -1,8 +1,7 @@
 "use client";
 
-import { db } from "@/data/db";
-import { ToDo, todoTable } from "@/data/schema";
-import { eq } from "drizzle-orm";
+import { ToDo } from "@/server/db/schema";
+import { api } from "@/trpc/react";
 import { useState } from "react";
 
 type ToDoItemProps = {
@@ -11,18 +10,35 @@ type ToDoItemProps = {
 
 export function ToDoItem({ todo }: ToDoItemProps) {
   const [completed, setCompleted] = useState(todo.completed ?? false);
+  const [dueDate, setDueDate] = useState(todo.dueDate ?? null);
 
-  const toggleDbTask = async () => {
-    await db
-      .update(todoTable)
-      .set({ completed: !completed })
-      .where(eq(todoTable.id, todo.id))
-      .execute();
-  };
+  const deleteDbTask = api.todo.delete.useMutation();
+  const updateDueDateDbTask = api.todo.update.useMutation();
+  const toggleDbTask = api.todo.toggle.useMutation();
 
   const toggleTask = async () => {
     setCompleted(!completed);
-    await toggleDbTask();
+    await toggleDbTask.mutateAsync({
+      id: todo.id,
+      completed: !completed,
+    });
+  };
+
+  function setTaskDueDate(value: string): void {
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      console.error("Invalid date");
+      return;
+    }
+    setDueDate(date);
+    updateDueDateDbTask.mutateAsync({
+      id: todo.id,
+      dueDate: date,
+    });
+  }
+
+  const deleteTask = async () => {
+    await deleteDbTask.mutateAsync({ id: todo.id });
   };
 
   return (
@@ -44,13 +60,13 @@ export function ToDoItem({ todo }: ToDoItemProps) {
       <div className="flex items-center">
         <input
           type="date"
-          value={todo.dueDate?.toISOString().split("T")[0] || ""}
-          // onChange={(e) => setTaskDueDate(e.target.value)}
+          value={dueDate?.toISOString().split("T")[0] || ""}
+          onChange={(e) => setTaskDueDate(e.target.value)}
           className="mr-2 p-1 bg-gray-700 border border-gray-600 rounded-md text-sm"
         />
         <button
-          // onClick={() => deleteTask()}
-          className="text-red-500 hover:text-red-700"
+          onClick={deleteTask}
+          className="text-red-500 hover:text-red-400"
         >
           ✕
         </button>

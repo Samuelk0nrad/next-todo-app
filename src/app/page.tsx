@@ -1,7 +1,7 @@
-import { db } from "@/data/db";
+import { db } from "@/server/db";
 import { AddToDo } from "./_component/AddToDo";
 import { ToDoList } from "./_component/ToDoList";
-import { todoTable } from "@/data/schema";
+import { todoTable } from "@/server/db/schema";
 
 export default async function Home() {
   const tasks = await db.select().from(todoTable).execute();

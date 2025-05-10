@@ -1,4 +1,4 @@
-import { ToDo } from "@/data/schema";
+import { ToDo } from "@/server/db/schema";
 import { ToDoItem } from "./ToDoItem";
 
 interface ToDoListProps {
